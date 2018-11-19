@@ -1,23 +1,21 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+  	<!--<Info></Info>-->
     <router-view/>
   </div>
 </template>
 
 <script>
+			import Home from './components/pages/home/Home'
+//		import Info from './components/pages/Info'
+//		import Login from './components/pages/Login'
+//			import Reg from './components/pages/Reg'
 export default {
-  name: 'App'
+  name: 'App',
+  components:{Home}
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
