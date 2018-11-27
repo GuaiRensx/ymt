@@ -7,13 +7,13 @@
 		<div class="reg-container">
 			<fieldset id="">
 				<input @keyup="checkname" ref="username" type="text" value="" placeholder="请输入邮箱" class="reg_input email" id="username">
-				<input type="text" value="" placeholder="请输入邮箱验证码" class=" reg_input code fl">
-				<input @click="getcode()" class="fl btn_code" type="button" name="" id="Time" value="获取验证码" />
-				<input type="password" value="" placeholder="请输入6位以上密码" class="reg_input  pass">
+				<input type="text" ref="code" value="" placeholder="请输入邮箱验证码" class=" reg_input code fl">
+				<button @click="getcode()" :disabled="isDisable" class="fl btn_code" id="Time">{{content}}</button>
+				<input type="password" value="" ref="pass" placeholder="请输入6位以上密码" class="reg_input pass">
 				<div class="deal">注册即视为同意
 					<a class="ymt-deal" href="script">《洋码头用户协议》</a>
 				</div>
-				<input type="button" value="注册" class="btn-reg">
+				<input @click="reg" type="button" value="注册" class="btn-reg">
 			</fieldset>
 		</div>
 	</div>
@@ -33,7 +33,11 @@
 		components: {},
 		data() {
 			return {
-				us: true
+				us: true,
+				content: '免费获取验证码',
+				totalTime: 30,
+				canClick: true,
+				isDisable: false
 			}
 		},
 		mounted() {
@@ -44,6 +48,7 @@
 				if(this.us == false) {
 					return console.log('错误')
 				}
+				this.isDisable = false;
 				if(this.$refs.username.value != "" && /^([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+\.(?:com|cn)$/.test(this.$refs.username.value)) {
 					axios({
 						method: "post",
@@ -52,17 +57,39 @@
 							email: this.$refs.username.value
 						})
 					}).then(res => {
-						console.log(res);
+						if(res.data.err == 0) {
+							if(!this.canClick) return //改动的是这两行代码
+							this.canClick = false
+							this.isDisable = false
+							this.content = this.totalTime + 's后重新发送'
+							let clock = window.setInterval(() => {
+								this.totalTime--
+									this.isDisable = true
+								this.content = this.totalTime + 's后重新发送'
+								if(this.totalTime < 0) {
+									window.clearInterval(clock)
+									this.content = '重新发送验证码'
+									this.totalTime = 30
+									this.canClick = true //这里重新开启
+									this.isDisable = false
+								}
+							}, 1000)
+						} else {
+							Toast({
+								message: '验证码发送错误',
+								position: 'top',
+								duration: 2000
+							});
+						}
 					})
 				} else {
 					Toast({
-						message: '该账户不合法，例：xxxx@qq/163/126.com',
+						message: '该账户不合法',
 						position: 'top',
-						duration: 1000
+						duration: 2000
 					});
 				}
 			},
-
 			checkname() {
 				if(this.$refs.username.value != '') {
 					axios({
@@ -72,17 +99,73 @@
 							username: this.$refs.username.value
 						})
 					}).then(res => {
-						console.log(res);
+						console.log(res.data.msg);
+						if(res.data.err == -1) {
+							Toast({
+								message: '该账户已注册',
+								position: 'top',
+								duration: 2000
+							});
+						}
 						this.us = res.data.err == -1 ? false : true;
 					}).catch((err) => {
 						cosole.log(err)
 					})
 				} else {
-					console.log('用户名不能为空')
+					Toast({
+						message: '用户名不能为空',
+						position: 'top',
+						duration: 2000
+					});
 				}
 			},
 			reg() {
-
+				console.log(111)
+				let pass = this.$refs.pass.value;
+				let username = this.$refs.username.value;
+				let code = this.$refs.code.value;
+				if(pass != '' && /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,20}$/.test(pass)) {
+					axios({
+						method: "post",
+						url: "api/api/user/reg",
+						data: qs.stringify({
+							username: username,
+							pass: pass,
+							code: code
+						})
+					}).then(res => {
+						console.log(res)
+						if(res.data.err == -1) {
+							Toast({
+								message: '验证码错误',
+								position: 'top',
+								duration: 2000
+							});
+						} else {
+							console.log(res)
+							Toast({
+								message: '注册成功',
+								position: 'top',
+								duration: 2000
+							});
+						}
+					}).catch((err) => {
+						console.log(res)
+						if(res.data.err == -1) {
+							Toast({
+								message: '注册失败',
+								position: 'top',
+								duration: 2000
+							});
+						}
+					})
+				} else {
+					Toast({
+						message: '密码格式为：大于6位的字母+数字，字母+特殊字符，数字+特殊字符组合',
+						position: 'top',
+						duration: 2000
+					});
+				}
 			}
 		}
 	}

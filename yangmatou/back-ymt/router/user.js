@@ -57,8 +57,8 @@ Router.post('/login',(req,res)=>{
 	userModel.find({username,pass})
 	.then((data)=>{
 //		console.log(data)
-		if(data.length>=1){return res.send('登录成功')}
-		res.send('登录失败')
+		if(data.length>=1){return res.send(util.sendData(0,'登录成功',null))}
+		res.send(util.sendData(-1,'登录失败',null))
 	})
 })
 module.exports=Router

@@ -5,22 +5,30 @@
 			登录
 		</div>
 		<div class="login-con">
-			<input class="username k" type="text" name="username" id="username" placeholder="输入邮箱">
-				<input class="password k" type="password" name="password" id="password" placeholder="输入登录密码">
+			<input class="username k" type="text" ref="username" name="username" id="username" placeholder="输入邮箱">
+			<input class="password k" type="password" ref="pass" name="password" id="password" placeholder="输入登录密码">
 			<label class="free-pass">
                 <input type="checkbox" value="true" checked="" class="check-box">
                 <span class="switch"></span>
                 <span class="text">两周内免登陆</span>
             </label>
-            <input type="submit" value="登录" class="submit" id="submit">
-            <div class="other-select">
-            	<router-link to="#" class="faster-log fl">快速注册</router-link>
-            	<router-link to="#" class="find-ps fr">下载app找回密码</router-link>
-            </div>
+			<input @click="login" type="submit" value="登录" class="submit" id="submit">
+			<div class="other-select">
+				<router-link to="/Reg" class="faster-log fl">快速注册</router-link>
+				<router-link to="#" class="find-ps fr">下载app找回密码</router-link>
+			</div>
 		</div>
 	</div>
 </template>
 <script>
+	import Vue from 'vue'
+	import { Toast } from 'mint-ui';
+	import $ from 'jquery';
+	import axios from 'axios'
+	axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'; //全局更改
+	import qs from "qs"; //配合qs模块转化post请求的参数，记得先npm install qs
+	//	Vue.prototype.axios = axios;
+	//	Vue.prototype.qs = qs;
 	export default {
 		name: 'Login',
 		components: {},
@@ -28,8 +36,47 @@
 			return {
 				name: 'page login'
 			}
+		},
+		methods: {
+			login() {
+				let pass = this.$refs.pass.value;
+				let username = this.$refs.username.value;
+				if(pass && username != '') {
+					axios({
+						method: "post",
+						url: "api/api/user/login",
+						data: qs.stringify({
+							username: username,
+							pass: pass
+						})
+					}).then(res => {
+						console.log(res);
+						if(res.data.err == -1) {
+							Toast({
+								message: '登录失败',
+								position: 'top',
+								duration: 2000
+							});
+						}else{
+							Toast({
+								message: '登录成功',
+								position: 'top',
+								duration: 2000
+							});
+						}
+					}).catch((err) => {
+						cosole.log(res)
+					})
+				} else {
+					Toast({
+						message: '用户名或密码不能为空',
+						position: 'top',
+						duration: 2000
+					});
+				}
+			}
 		}
-	}
+		}
 </script>
 
 <style lang="less" scoped>
@@ -77,12 +124,12 @@
 					.fs(14);
 					.margin-bottom(10);
 				}
-					.password {
-						.w(264.5);
-						.fs(14);
-						.padding(10, 0, 10, 10);
-					}
-					input::-webkit-input-placeholder {
+				.password {
+					.w(264.5);
+					.fs(14);
+					.padding(10, 0, 10, 10);
+				}
+				input::-webkit-input-placeholder {
 					color: #d7d7d7;
 				}
 				.free-pass {
@@ -92,20 +139,20 @@
 					color: #646464;
 					.margin-bottom(30);
 				}
-				.submit{
+				.submit {
 					.fs(16);
 					display: block;
 					width: 100%;
 					.h(40);
-					background:#c33;
-					color:#fff;
+					background: #c33;
+					color: #fff;
 				}
-				.other-select{
+				.other-select {
 					.margin-top(10);
 					width: 100%;
 					.fs(12);
-					a{
-						text-decoration:underline;
+					a {
+						text-decoration: underline;
 						color: #9b9b9b;
 					}
 				}
