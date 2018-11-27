@@ -8,8 +8,8 @@
 			<fieldset id="">
 				<input @keyup="checkname" ref="username" type="text" value="" placeholder="请输入邮箱" class="reg_input email" id="username">
 				<input type="text" value="" placeholder="请输入邮箱验证码" class=" reg_input code fl">
-				<input @click="getcode()" class="fl btn_code" type="button" name="" id="Time" value="获取验证码" />
-				<input type="password" value="" placeholder="请输入6位以上密码" class="reg_input  pass">
+				<input @click="getcode" class="fl btn_code" type="button" name="" id="Time" value="获取验证码" />
+				<input @keyup="checkpass" ref="username" type="password" value="" placeholder="请输入6位以上密码" class="reg_input  pass">
 				<div class="deal">注册即视为同意
 					<a class="ymt-deal" href="script">《洋码头用户协议》</a>
 				</div>
@@ -21,7 +21,6 @@
 </template>
 <script>
 	import Vue from 'vue'
-	import { Toast } from 'mint-ui';
 	import $ from 'jquery';
 	import axios from 'axios'
 	axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'; //全局更改
@@ -33,7 +32,8 @@
 		components: {},
 		data() {
 			return {
-				us: true
+				us: true,
+				pass:true
 			}
 		},
 		mounted() {
@@ -41,10 +41,8 @@
 		},
 		methods: {
 			getcode() {
-				if(this.us == false) {
-					return console.log('错误')
-				}
-				if(this.$refs.username.value != "" && /^([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+\.(?:com|cn)$/.test(this.$refs.username.value)) {
+				if(this.us==false){return console.log('错误')}
+				if(this.$refs.username.value!= "" && /^([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|_|.]?)*[a-zA-Z0-9]+\.(?:com|cn)$/.test(this.$refs.username.value)){
 					axios({
 						method: "post",
 						url: "api/api/user/getcode",
@@ -52,14 +50,8 @@
 							email: this.$refs.username.value
 						})
 					}).then(res => {
-						console.log(res);
+						console.log(res.data.msg);
 					})
-				} else {
-					Toast({
-						message: '该账户不合法，例：xxxx@qq/163/126.com',
-						position: 'top',
-						duration: 1000
-					});
 				}
 			},
 
@@ -73,16 +65,21 @@
 						})
 					}).then(res => {
 						console.log(res);
-						this.us = res.data.err == -1 ? false : true;
+						this.us=res.data.err==-1?false:true;
 					}).catch((err) => {
-						cosole.log(err)
+						cosole.log(err.data.msg)
 					})
 				} else {
 					console.log('用户名不能为空')
 				}
 			},
+			checkpass(){
+				if(this.$refs.pass.value !=''&&this.$refs.username.value!= "" &&/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,20}$/.test(this.$refs.pass.value)){
+					
+				}
+			},
 			reg() {
-
+				
 			}
 		}
 	}

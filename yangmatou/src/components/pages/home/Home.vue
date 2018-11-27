@@ -13,9 +13,11 @@
 		import Info from '../Info'
 		import Login from '../Login'
 		import Reg from '../Reg'
+		import About_ymt from '../About_ymt'
+		import Media from '../Media'
 	export default{
 		name:'Home',
-		components:{Info,Login,Reg},//注册
+		components:{Info,Login,Reg,About_ymt,Media},//注册
 		data(){
 			return{
 				name:'我是home页面',

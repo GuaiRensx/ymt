@@ -74,14 +74,17 @@
 					.w(264.5);
 					/*.h(40);*/
 					.padding(10, 0, 10, 10);
-					.fs(12);
+					.fs(14);
 					.margin-bottom(10);
 				}
 					.password {
 						.w(264.5);
-						.fs(12);
+						.fs(14);
 						.padding(10, 0, 10, 10);
 					}
+					input::-webkit-input-placeholder {
+					color: #d7d7d7;
+				}
 				.free-pass {
 					display: block;
 					.padding-top(10);
