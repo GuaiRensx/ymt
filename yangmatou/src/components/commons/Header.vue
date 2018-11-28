@@ -17,9 +17,9 @@
 				<a href="#">
 					<i class="fa fa-shopping-cart"></i>
 				</a>
-				<a href="#">
+				<router-link to="/My">
 					<i class="fa fa-user-o"></i>
-				</a>
+				</router-link>
 			</div>
 			
 		</div>

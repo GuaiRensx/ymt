@@ -2,8 +2,8 @@
 	<div class="footer">
 		<div class="text">
 			<a href="#">客户端</a>|
-			<a href="#">关于洋码头</a>|
-			<a href="#">媒体报道</a>
+			<router-link to="/About_ymt">关于洋码头</router-link>|
+			<router-link to="/Media">媒体报道</router-link>|
 		</div>
 		<div class="desc">上海洋码头网络技术有限公司 版权所有</div>
 	</div>
