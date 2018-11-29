@@ -1,5 +1,7 @@
 <template>
 	<div class="detail">
+		<Top></Top>
+		<Header></Header>
 		<DetailBanner></DetailBanner>
 		<div class="product-info">
 			<div class="productinfo-content">
@@ -90,20 +92,88 @@
 				</div>
 			</div>
 		</div>
-		<!--<div class="seller-wrap">关注</div>
-		<div class="intro-pic">图片</div>
-		<div class="image-text-wrap">图文详情</div>
-		<div class="one-to-ten">假一赔十</div>
-		<div class="likeproduct">推荐</div>-->
+		<!--<div class="seller-wrap">关注</div>-->
+		<div class="intro-pic">
+			<img src="../../../dist/static/images/title.png" alt="" />
+		</div>
+		<div class="image-text-wrap">
+			<div class="m-title">
+				<span>
+					<i class="cro-fl"></i>详情
+					<i class="cro-fr"></i>
+				</span>
+			</div>
+			<div class="title">
+				<span>图文详情</span>
+			</div>
+			<div class="list">
+				<div class="item">
+					<div class="name">
+						<h2>商品参数</h2>
+					</div>
+				</div>
+				<div class="keylist">
+					<div class="keyitem">
+						<span class="key">适用肤质</span>
+						<span class="value">所有肤质</span>
+					</div>
+					<div class="keyitem">
+						<span class="key">品牌归属地	</span>
+						<span class="value">是</span>
+					</div>
+					<div class="keyitem">
+						<span class="key">是否为特殊用途化妆品</span>
+						<span class="value">否</span>
+					</div>
+					<div class="keyitem">
+						<span class="key">原产地</span>
+						<span class="value">韩国</span>
+					</div>
+					<div class="keyitem">
+						<span class="key">面膜产品类型</span>
+						<span class="value">贴片式面膜</span>
+					</div>
+					<div class="keyitem">
+						<span class="key">护肤功效</span>
+						<span class="value">保湿,滋润,去干纹,抗皱,美白,提亮肤色,舒缓肌肤</span>
+					</div>
+					<div class="keyitem">
+						<span class="key">规格类型</span>
+						<span class="value">正常规格</span>
+					</div>
+					<div class="keyitem">
+						<span class="key">保质期</span>
+						<span class="value">3年</span>
+					</div>
+					<div class="keyitem">
+						<span class="key">容量</span>
+						<span class="value">25ml*10片</span>
+					</div>
+				</div>
+				<div class="item">
+					<div class="name">
+						<h2>商品介绍</h2>
+					</div>
+					<div class="text">
+						补水保湿 淡化细纹 滋润肌肤  紧致抗皱 修复损伤 含有高浓缩燕窝原液,集中供给皮肤水分,锁水能力突出,在皮肤水分子表面形成保护膜防止水分快速流失 令皮肤长时间保湿水嫩哦<br/>超级补水 镇静皮肤 增加皮肤光泽 排除皮肤废弃物 恢复皮肤活力 改善肤质，含有高浓缩燕窝原液，集中供给皮肤水分，锁水能力突出，在皮肤水分子表面形成保护膜防止水分快速流失，令皮肤长时间保湿不缺水保护修复对外界刺激敏感的皮肤，令其更加健康。宝宝们，版本随机发货哦
+					</div>
+					<div class="pics">
+						<img v-for="(a,i) in List.picList" :src="a" alt="" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--<div class="one-to-ten">假一赔十</div>-->
+		<!--<div class="likeproduct">推荐</div>-->-->
 		<div class="operate-wrap">
 			<div class="left fl">
 				<span class="collection">
-					<i class="icon icon-collect"></i>
+					<i class="fa fa-heart-o xin"></i>
 					<i class="text">收藏</i>
 				</span>
 			</div>
 			<div class="right fr">
-				<span class="addCart">加入购物车</span>
+				<span class="addCart" @click="addToShopCar">加入购物车</span>
 				<span class="buy">立即购买</span>
 			</div>
 		</div>
@@ -112,19 +182,26 @@
 </template>
 
 <script>
+import Top from './Top'
+import Header from '../commons/Header';
 import Vue from 'vue';
 import Swiper from 'swiper';
 import DetailBanner from '../commons/DetailBanner';
 	export default{
 		name:'Detail',
 		components:{
+			Top,
+			Header,
 			DetailBanner
 		},
 		data(){
 			return {
 				name:'我是详情页',
 				productId:'',
-				List:[]
+				selectCount:1,
+				buyList:[],//买家须知
+				productInfo:[],//商品参数
+				List:[]//商品介绍
 			}
 		},
 		methods:{
@@ -135,12 +212,33 @@ import DetailBanner from '../commons/DetailBanner';
 			getDetail(){
 				this.$axios.get('/api/item/api/getProductDescriptionInfo?',{params:{productId:this.productId}})
 				.then((res)=>{
-					this.List=res.result.moduleList;
+//					this.List=res.result.moduleList;
+					if(res.result.moduleList.length===3){
+						this.List=res.result.moduleList[2];
+					}else if(res.result.moduleList.length===2){
+						this.List=res.result.moduleList[1];
+					}else if(res.result.moduleList.length===1){
+						this.List=res.result.moduleList[0];
+					}
 					console.log(this.List);
 				})
 				.catch((err)=>{
 					console.log(err);
 				})
+			},
+			addToShopCar(){
+				//添加到购物车
+				//拼接出一个要添加到 
+				var goodsInfo={
+					id:this.productId,
+					count:this.selectCount,
+					price:30,
+					picture:this.List.picList[2],
+					selected:true
+				};
+				
+				this.$store.commit("addToCar",goodsInfo);
+				console.log(goodsInfo)
 			}
 		},
 		created(){
@@ -590,14 +688,174 @@ import DetailBanner from '../commons/DetailBanner';
 		    .h(45);
 		    display: flex;
 		    border-top: 1px solid #dedede;
+		    background: #fff;
+		    text-align: center;
 		    .fs(14);
+		    box-sizing: border-box;
+		    padding-left:15%;
+		    padding-top:1%;
 		    i{
-		    	font-style: normal;
+		    	display: inline-block;
 		    }
-		    
+		    .text{
+		    	width:100%;
+		    	.padding-top(2);
+			    color: #999;
+		    	font-style: normal;
+		    	text-align: center;
+		    	.fs(12);
+		    }
 		}
 		.right{
+			    width: 60%;
+			    .addCart{
+			    	/*display: block;*/
+			    	float:left;
+			    	width:50%;
+			    	height:100%;
+				    background-color: rgba(242,143,37,.8);
+				    color: #fff;
+				    .fs(14);
+				    text-align: center;
+				    .lh(45);
+				}
+				.buy{
+					float:left;
+			    	width:50%;
+			    	height:100%;
+				    background-color: #c33;
+				    color: #fff;
+				    .fs(14);
+				    text-align: center;
+				    .lh(45);
+				}
 		}
+	}
+	.intro-pic{
+		width:100%;
+		img{
+			width:100%;
+		}
+	}
+	.image-text-wrap{
+		width:100%;
+		background: #fff;
+		.m-title{
+	    	width: 100%;
+	    	.h(31);
+	    	.lh(10);
+		    overflow: hidden;
+		    text-align: center;
+		    .margin-bottom(10);
+		    background: #eee;
+		    span{
+		    	display: inline-block;
+			    .padding(0,15,0,15);
+			    color: #999;
+			    .fs(12);
+			    position: relative;
+			    i{
+			    	position: absolute;
+				    display: inline-block;
+				    .w(5);
+				    .h(5);
+				    border-radius: 50%;
+				    background:#dedede;
+				    top: 50%;
+				    transform: translateY(-50%);
+				    z-index: 11;
+			    }
+			    .cro-fl{
+			    	.left(-2);
+			    }
+			    .cro-fl::before{
+			    	.right(5);
+    				background-color: hsla(0,0%,87%,.5);
+			    	content: "";
+				    position: absolute;
+				    top: 50%;
+				    .w(35);
+				    height: 1px;
+			    }
+			    .cro-fr{
+			    	.right(-2);
+			    }
+			    .cro-fr::after{
+			    	.left(5);
+    				background-color: hsla(0,0%,87%,.5);
+			    	content: "";
+				    position: absolute;
+				    top: 50%;
+				    .w(35);
+				    height: 1px;
+			    }
+		    }
+	    }
+	    .title{
+	    	color:#292929;
+	    	box-sizing: border-box;
+	    	width:100;
+	    	.fs(12);
+	    	.margin-bottom(8);
+	    	.padding(10,0,10,12);
+	    	.border-bottom(1,solid,hsla(0,0%,87%,.5))
+	    }
+	    .list{
+	    	width: 100%;
+		    overflow: hidden;
+		    .margin-bottom(5);
+		    .name{
+		    	  width: 100%;
+				    .padding(20,0,15,20);
+				    overflow: hidden;
+				    h2{
+				    	width: 100%;
+					    overflow: hidden;
+					    text-align: center;	
+					    .fs(12);
+				    }
+		    }
+		    .keylist{
+		    	    width: 100%;
+    				overflow: hidden;
+    				.keyitem{
+    					    width: 100%;
+						    overflow: hidden;
+						    display: flex;
+						    .margin-bottom(10);
+						    .key{
+						    	.margin-left(20);
+							    .w(70);
+							    overflow: hidden;
+							    .fs(12);
+							    .padding-right(10);
+							    color: #9b9b9b;
+							    .lh(18);
+						    }
+						    .value{
+						    	flex: 1;
+							    overflow: hidden;
+							    .fs(12);
+							    .lh(18);
+							    word-break: break-all;
+							    color: #383838;
+						    }
+    				}
+		    }
+		    .text{
+		    	.fs(12);
+		    }
+		    .pics{
+		    	width: 100%;
+			    overflow: hidden;
+			    font-size: 0;
+			    img{
+			    	width: 100%;
+				    display: inline-block;
+				    border: 0;
+			    }
+		    }
+	    }
 	}
 }
 

@@ -3,7 +3,7 @@
 		<div class="bt-title">
 			<span class="fa fa-heart-o">&nbsp;&nbsp;猜你喜欢</span>
 		</div>
-		<ul v-infinite-scroll=""
+		<ul v-infinite-scroll="loadMore"
 			  infinite-scroll-disabled="loading"
 			  infinite-scroll-distance="10">
 			<li class="product-wrapper" v-for="(item,index) in goodsList" >
@@ -87,6 +87,7 @@
 			}
 		},
 		created(){
+			
 			this.getInfo();
 		}
 	}

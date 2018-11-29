@@ -6,6 +6,7 @@
 </template>
 
 <script>
+//	import Top from './components/pages/Top';
 import Home from './components/pages/home/Home';
 export default {
   name: 'App',

@@ -5,6 +5,8 @@ import App from './App'
 import router from './router/index.js'
 
 import Axios from 'axios';
+
+import store from './store/index.js';
 Vue.prototype.$axios=Axios;
 
 	Axios.interceptors.response.use(function (response) {
@@ -24,6 +26,7 @@ import './components/styles/base.css';
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

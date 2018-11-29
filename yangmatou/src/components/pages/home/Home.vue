@@ -11,7 +11,8 @@
 </template>
 
 <script>
-	import Top from '../top';
+	import Top from '../Top';
+	
 	import Header from '../../commons/Header';
 	import Banner from '../../commons/Banner';
 	import Xsqbanner from '../../commons/Xsqbanner';
