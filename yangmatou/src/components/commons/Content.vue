@@ -80,6 +80,7 @@
 				})
 			},
 			getDetail(i){
+				document.documentElement.scrollTop=0
 				let id=this.goodsList[i].id;
 				this.$router.push({path:'/detail',query:{productId:id}})
 				console.log(id);
