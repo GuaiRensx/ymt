@@ -2,11 +2,11 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import '../css/base.css'
 import router from './router/index.js'
-import  store from './store/index.js'
+
 import Axios from 'axios';
-import $ from 'jquery';
+
+import store from './store/index.js';
 Vue.prototype.$axios=Axios;
 
 	Axios.interceptors.response.use(function (response) {

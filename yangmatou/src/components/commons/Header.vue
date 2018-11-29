@@ -6,17 +6,17 @@
 				</div>
 			<div class="nav fl">
 				
-				<a href="#">
+				<router-link to="/home">
 					<span>首页</span>
-				</a>
+				</router-link>
 				<a href="#">
 					<span>社区</span>
 				</a>
 			</div>
 			<div class="icon-list fr">
-				<a href="#">
-					<i class="fa fa-shopping-cart"></i>
-				</a>
+				<router-link to="/shopCar">
+					<i class="fa fa-shopping-cart">{{$store.getters.getAllCount}}</i>
+				</router-link>
 				<router-link to="/My">
 					<i class="fa fa-user-o"></i>
 				</router-link>
@@ -60,6 +60,7 @@
 			.lh(20);	
 			display:inline-block;
 			.margin-right(8);
+
 			a{
 				display: inline-block;
 				.padding(0,8,0,8);
@@ -78,6 +79,7 @@
 		}
 		.icon-list{
 			display: inline-block;
+			
 			.lh(24);
 				a{
 					display: inline-block;
@@ -89,7 +91,6 @@
 					
 					i{
 						display: inline-block;
-						
 						.h(24);
 						.lh(24);
 						.margin-bottom(8);

@@ -18,7 +18,7 @@
 						<div class="person fl">
 							<img src="http://s1.ymatou.com/homem/images/share_personal-9287711f0c.png" />
 						</div>
-						<router-link to="/login"><div class="login fl">
+						<router-link to="/home"><div class="login fl">
 							欢迎选购
 						</div></router-link>
 					</div>
@@ -57,7 +57,7 @@
 		},
 		methods:{
 			exit(){
-				this.$store.commit('changgeLogin',false);
+				this.$store.commit('changeLogin',false);
 				window.localStorage.setItem('login',false);
 				this.$router.replace('/my/Login')
 			}

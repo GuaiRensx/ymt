@@ -144,6 +144,7 @@
 							});
 						} else {
 							console.log(res)
+							this.$router.replace('/my/Login')
 							Toast({
 								message: '注册成功',
 								position: 'top',

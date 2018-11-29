@@ -53,7 +53,7 @@
 						console.log(res);
 						if(res.err == -1) {
 							Toast({
-								message: '登录失败',
+								message: '该账户不存在或密码错误',
 								position: 'top',
 								duration: 2000
 							});
@@ -68,7 +68,7 @@
 							
 						}
 					}).catch((err) => {
-						cosole.log(res)
+						cosole.log(err)
 					})
 				} else {
 					Toast({
